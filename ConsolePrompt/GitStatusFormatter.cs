@@ -24,12 +24,12 @@ namespace ConsolePrompt
             var currentBranch = repo.GetCurrentBranch();
             if (!string.IsNullOrWhiteSpace(currentBranch))
             {
-                output.Append(currentBranch);
+                output.Append(JiraShorten(currentBranch));
 
                 var upstreamBranch = repo.GetUpstreamBranch();
                 if (!string.IsNullOrWhiteSpace(upstreamBranch))
                 {
-                    output.Append(" -> ").Append(upstreamBranch);
+                    output.Append(" -> ").Append(JiraShorten(upstreamBranch));
 
                     var (ahead, behind) = repo.GetAheadBehindInformation(currentBranch, upstreamBranch);
                     if (ahead != 0 && behind != 0)
@@ -37,7 +37,7 @@ namespace ConsolePrompt
                     else if (ahead != 0)
                         output.Append($" |C+{ahead}");
                     else if (behind != 0)
-                        output.Append($" |C-{behind}|R (FF)");
+                        output.Append($" |C-{behind} |Y(FF)");
                 }
             }
             else
@@ -53,6 +53,15 @@ namespace ConsolePrompt
 
             output.Append("|c)");
             yield return output.ToString();
+        }
+
+        private string JiraShorten(string branchName)
+        {
+            var ma = Regex.Match(branchName, @"^(?<short>([a-zA-Z0-9_]+/)?(feature|bugfix|hotfix)/[A-Za-z]+\-\d+)[-_].*$");
+            if (ma.Success)
+                return ma.Groups["short"].Value + "*";
+
+            return branchName;
         }
 
         private static void ConfigureGit()

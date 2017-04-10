@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ConsolePrompt
 {
@@ -17,6 +18,8 @@ namespace ConsolePrompt
                 ['c'] = "\x1b[0;36m",
                 ['B'] = "\x1b[1;34m",
                 ['b'] = "\x1b[0;34m",
+                ['Y'] = "\x1b[1;33m",
+                ['y'] = "\x1b[0;33m",
             };
 
         static void Main(string[] args)
@@ -24,6 +27,7 @@ namespace ConsolePrompt
             var formatters =
                 new IPromptFormatter[]
                 {
+                    new TimeFormatter(),
                     new AdminFormatter(),
                     new UsernameFormatter(),
                     new CurrentDirectoryFormatter(),
@@ -36,6 +40,7 @@ namespace ConsolePrompt
                  where !string.IsNullOrWhiteSpace(part)
                  select part).ToList();
 
+            Console.OutputEncoding = Encoding.GetEncoding(850);
             var output = string.Join(" ", parts);
             int index = 0;
             while (index < output.Length)

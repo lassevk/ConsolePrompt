@@ -24,7 +24,7 @@ namespace ConsolePrompt.Commander
         {
             _Monitors = monitors;
 
-            var standardOutputEncoding = Encoding.GetEncoding(850);
+            var standardOutputEncoding = Encoding.UTF8; // GetEncoding(850);
 
             _Process = new Process
             {
